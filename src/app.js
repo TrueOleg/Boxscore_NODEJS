@@ -1,12 +1,10 @@
 import createError from 'http-errors';
 import express from 'express';
-import path from 'path';
 import cors from 'cors';
 import logger from 'morgan';
 import router from './routes';
 import { dataController } from './controllers/games';
-import { mlb, nba } from './db';
-import { MLB_ID, NBA_ID } from './const';
+import { config } from '../config';
 import schedule from 'node-schedule';
 
 const app = express();
@@ -17,8 +15,8 @@ app.use(logger('dev'));
 app.use('/', router);
 
 var j = schedule.scheduleJob('0-59/15 * * * * *', function () {
-  dataController(NBA_ID, nba);
-  dataController(MLB_ID, mlb);
+  dataController(config.nba.leagueId, config.nba.client);
+  dataController(config.mlb.leagueId, config.mlb.client);
 })
 
 // catch 404 and forward to error handler
