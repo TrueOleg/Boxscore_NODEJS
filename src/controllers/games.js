@@ -7,6 +7,7 @@ import axios from 'axios';
 async function gameController(req, res, next) {
   try {
     const league = req.query.league;
+    console.log('aaa');
     let mongoCol;
     if (league === NBA) {
 
