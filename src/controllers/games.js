@@ -5,22 +5,26 @@ import axios from 'axios';
 async function gameController(req, res, next) {
   try {
     const league = req.query.league;
-    getLeagueData(res, config[league].leagueId, config[league].client);
+    getLeagueData(res, config[league].leagueId, config[league].client, next);
   } catch (err) {
     next(new Error(err.message));
   }
 }
 
-async function getLeagueData(res, leagueId, mongoCol) {
-  const doc = await mongoCol.findOne({});
-  const lastUpdate = new Date(doc.lastUpdate);
-  const now = new Date();
-  const time = ((now - lastUpdate) / 1000).toString();
-  if (time < 15) {
-    res.send(doc);
-  } else {
-    const newDoc = dataController(leagueId, mongoCol);
-    res.send(newDoc)
+async function getLeagueData(res, leagueId, mongoCol, next) {
+  try {
+    const doc = await mongoCol.findOne({});
+    const lastUpdate = new Date(doc.lastUpdate);
+    const now = new Date();
+    const time = ((now - lastUpdate) / 1000).toString();
+    if (time < 15) {
+      res.send(doc);
+    } else {
+      const newDoc = dataController(leagueId, mongoCol);
+      res.send(newDoc)
+    }
+  } catch (err) {
+    next(new Error(err.message));
   }
 }
 
@@ -33,6 +37,7 @@ async function dataController(league, mongoCol) {
     const doc = await mongoCol.findOneAndUpdate({}, { $set: data }, { upsert: true, returnNewDocument: true });
     return doc;
   } catch (err) {
+    console.log('error', err);
   }
 }
 

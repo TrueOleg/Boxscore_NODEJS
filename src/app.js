@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import logger from 'morgan';
 import router from './routes';
+import { client } from './db';
 import { dataController } from './controllers/games';
 import { config } from '../config';
 import schedule from 'node-schedule';
@@ -14,7 +15,7 @@ app.use(logger('dev'));
 
 app.use('/', router);
 
-var j = schedule.scheduleJob('0-59/15 * * * * *', function () {
+let j = schedule.scheduleJob('0-59/15 * * * * *', function () {
   dataController(config.nba.leagueId, config.nba.client);
   dataController(config.mlb.leagueId, config.mlb.client);
 })
