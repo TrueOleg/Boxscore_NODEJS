@@ -4,15 +4,12 @@ import path from 'path';
 import cors from 'cors';
 import logger from 'morgan';
 import router from './routes';
-import { scheduleDataController } from './controllers/games';
+import { dataController } from './controllers/games';
 import { mlb, nba } from './db';
-import { NBA, MLB } from './const';
+import { MLB_ID, NBA_ID } from './const';
 import schedule from 'node-schedule';
 
 const app = express();
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 
 app.use(cors());
 app.use(logger('dev'));
@@ -20,8 +17,8 @@ app.use(logger('dev'));
 app.use('/', router);
 
 var j = schedule.scheduleJob('0-59/15 * * * * *', function () {
-  scheduleDataController(NBA, nba);
-  scheduleDataController(MLB, mlb);
+  dataController(NBA_ID, nba);
+  dataController(MLB_ID, mlb);
 })
 
 // catch 404 and forward to error handler
