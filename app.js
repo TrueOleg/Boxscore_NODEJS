@@ -5,8 +5,9 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import router from './routes';
-import { nbaController, mlbController } from './controllers/games';
-import client from './db';
+import { scheduleDataController } from './controllers/games';
+import { mlb, nba } from './db';
+import { NBA, MLB } from './const';
 import schedule from 'node-schedule';
 
 const app = express();
@@ -24,8 +25,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', router);
 
 var j = schedule.scheduleJob('0-59/15 * * * * *', function () {
-  nbaController();
-  mlbController();
+  scheduleDataController(NBA, nba);
+  scheduleDataController(MLB, mlb);
 })
 
 // catch 404 and forward to error handler

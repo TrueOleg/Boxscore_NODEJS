@@ -1,11 +1,11 @@
 import express from 'express';
 
-import { mlbController, nbaController } from '../controllers/games';
+import { gameController } from '../controllers/games';
 
 const games = express.Router();
 
-games.get('/games/mlb', mlbController);
-games.get('/games/nba', nbaController);
+games.get('/games', gameController);
+// games.get('/games', nbaController);
 
 
 export default games;

@@ -10,6 +10,10 @@ client.connect(err => {
   mlb = client.db('games').collection('MLB');
   nba = client.db('games').collection('NBA');
   console.log('success');
+  const data = mlb.findOne({}).then((data) => {
+    console.log('data', data);
+  })
+
   // client.close();
 });
 
