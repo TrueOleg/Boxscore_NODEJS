@@ -13,7 +13,7 @@ const app = express();
 app.use(cors());
 app.use(logger('dev'));
 
-app.use('/', router);
+app.use('/api', router);
 
 let j = schedule.scheduleJob('0-59/15 * * * * *', function () {
   dataController(config.nba.leagueId, config.nba.client);
