@@ -18,10 +18,10 @@ async function getLeagueData(res, leagueId, mongoCol, next) {
     const now = new Date();
     const time = ((now - lastUpdate) / 1000).toString();
     if (time < 15) {
-      res.send(doc);
+      res.status(200).send(doc);
     } else {
       const newDoc = dataController(leagueId, mongoCol);
-      res.send(newDoc)
+      res.status(200).send(newDoc)
     }
   } catch (err) {
     next(new Error(err.message));
@@ -40,6 +40,5 @@ async function dataController(league, mongoCol) {
     console.log('error', err);
   }
 }
-
 
 export { gameController, dataController };

@@ -1,7 +1,19 @@
 import dotenv from 'dotenv';
 dotenv.config();
+
+function getCurrentDB() {
+  switch (process.env.NODE_ENV) {
+    case "development":
+      return process.env.DB_URI_DEVELOP;
+    case "production":
+      return process.env.DB_URI_PROD;
+    case "test":
+      return process.env.DB_URI_TEST;
+  }
+}
 export let config = {
-  db: process.env.NODE_ENV === "development" ? process.env.DB_URI_DEVELOP : process.env.DB_URI_PROD,
+  // db: process.env.NODE_ENV === "development" ? process.env.DB_URI_DEVELOP : process.env.DB_URI_PROD,
+  db: getCurrentDB(),
   dbUrl: process.env.CLUSTER_URL,
   nba: {
     client: null,
