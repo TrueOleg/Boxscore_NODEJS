@@ -2,13 +2,14 @@ import mongo from 'mongodb';
 import { config } from '../../config';
 
 const MongoClient = mongo.MongoClient;
-const client = new MongoClient(config.dbUrl, { useNewUrlParser: true });
-// let mlb, nba;
 
-client.connect(err => {
+MongoClient.connect(config.dbUrl)
+  .then((client) => {
+    config.mlb.client = client.db(config.db).collection('MLB');
+    config.nba.client = client.db(config.db).collection('NBA');
+  })
+  .catch((err) => {
+    console.log('error', err);
+  })
 
-  config.mlb.client = client.db(config.db).collection('MLB');
-  config.nba.client = client.db(config.db).collection('NBA');
-});
-
-export { client }
+export { MongoClient }
