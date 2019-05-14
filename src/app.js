@@ -1,4 +1,5 @@
 import createError from 'http-errors';
+import http from 'http';
 import express from 'express';
 import cors from 'cors';
 import logger from 'morgan';
@@ -7,6 +8,7 @@ import { client } from './db';
 import { dataController } from './controllers/games';
 import { config } from '../config';
 import schedule from 'node-schedule';
+import socketIO from 'socket.io';
 
 const app = express();
 
@@ -35,8 +37,30 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.send(err);
 });
+const server = http.createServer(app);
 
-app.listen(3600, () =>
-  console.log(`Server is listening on port 3600`))
+server.listen(3600, () =>
+  console.log(`Server is listening on port 3600`));
+
+const io = socketIO(server);
+io.origins("*:*");
+
+io.on("connection", socket => {
+  schedule.scheduleJob('0-59/15 * * * * *', async function () {
+
+    socket.emit("nba", {
+      data: await config.nba.client.findOne({})
+    });
+
+    socket.emit("mlb", {
+      data: await config.mlb.client.findOne({})
+    });
+
+  });
+  socket.on('disconnect', function () {
+    io.emit('user disconnected');
+  });
+})
+
 
 module.exports = app;
