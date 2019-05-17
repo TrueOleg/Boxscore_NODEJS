@@ -5,6 +5,7 @@ import axios from 'axios';
 async function gameController(req, res, next) {
   try {
     const league = req.query.league;
+    console.log('config', config);
     getLeagueData(res, config[league].leagueId, config[league].client, next);
   } catch (err) {
     next(new Error(err.message));
