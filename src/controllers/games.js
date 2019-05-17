@@ -2,7 +2,7 @@ import { urlHelper } from '../helpers/url-helper';
 import { config } from '../../config';
 import axios from 'axios';
 
-async function gameController(req, res, next) {
+function gameController(req, res, next) {
   try {
     const league = req.query.league;
     getLeagueData(res, config[league].leagueId, config[league].client, next);
@@ -13,16 +13,16 @@ async function gameController(req, res, next) {
 
 async function getLeagueData(res, leagueId, mongoCol, next) {
   try {
-    const doc = await mongoCol.findOne({});
+    let doc = await mongoCol.findOne({});
     const lastUpdate = new Date(doc.lastUpdate);
     const now = new Date();
-    const time = ((now - lastUpdate) / 1000).toString();
-    if (time < 15) {
-      res.status(200).send(doc);
-    } else {
-      const newDoc = dataController(leagueId, mongoCol);
-      res.status(200).send(newDoc)
+
+    if (now - lastUpdate > 15 * 1000) {
+      doc = dataController(leagueId, mongoCol);
     }
+
+    res.status(200).send(doc)
+
   } catch (err) {
     next(new Error(err.message));
   }

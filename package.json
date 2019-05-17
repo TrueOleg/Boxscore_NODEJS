@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "NODE_ENV=test mocha --require @babel/register src/tests/*.js --exit",
+    "test": "NODE_ENV=test nyc mocha --require @babel/register src/tests/*.js --exit",
     "start": "NODE_ENV=production node --require @babel/register ./src/index.js",
     "dev": "NODE_ENV=development nodemon --require @babel/register ./src/index.js"
   },
@@ -30,6 +30,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "mocha": "^6.1.4",
-    "nodemon": "^1.19.0"
+    "nodemon": "^1.19.0",
+    "nyc": "^14.1.1"
   }
 }
