@@ -5,29 +5,22 @@ import startServer from '../app';
 
 chai.use(chaiHttp);
 chai.should();
-let server;
 
 
 describe("Students", () => {
   describe("GET /", () => {
 
-    it("should get all students record", async (done) => {
-      try {
-        server = await startServer();
-        console.log('test1', server);
+    it("should get all students record", async () => {
 
-        await chai.request(server)
-          .get('/api/games?league=mlb')
-          .end((err, res) => {
-            console.log('res', res.error);
+      let server = await startServer();
 
-          });
-      } catch (err) {
-        console.log('error', err);
-      }
+      const res = await chai.request(server).get('/api/games?league=mlb');
+      chai.expect(typeof res.body).to.equal('object');
+      chai.expect(res.body.league).to.equal('MLB');
 
 
-    });
+
+    }).timeout(10000);
 
   });
 });

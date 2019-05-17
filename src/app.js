@@ -19,6 +19,8 @@ const startServer = async () => {
   app.use(logger('dev'));
 
   app.use('/api', router);
+  await dataController(config.nba.leagueId, config.nba.client);
+  await dataController(config.mlb.leagueId, config.mlb.client);
 
   let j = schedule.scheduleJob('0-59/15 * * * * *', function () {
     dataController(config.nba.leagueId, config.nba.client);
@@ -41,11 +43,8 @@ const startServer = async () => {
     res.send(err);
   });
   // const server = http.createServer(app);
-  server = app.listen(3600, () =>
+  const server = await app.listen(3600, () =>
     console.log(`Server is listening on port 3600`));
-
-  // server.listen(3600, () =>
-  //   console.log(`Server is listening on port 3600`));
 
   const io = socketIO(server);
   io.origins("*:*");
